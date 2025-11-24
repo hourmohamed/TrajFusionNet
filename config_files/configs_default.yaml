@@ -9,7 +9,7 @@ model_opts:
   overlap: 0.6 # set to 0.6 for pie and 0.8 for jaad
   balance_data: False # set to True to resample data so that the number of samples in each class is the same
   apply_class_weights: True # apply class weights to offset class imbalance
-  dataset: jaad_all
+  dataset: jaad
   normalize_boxes: True
   generator: True # using generator is slower but uses less memory, otherwise up to 64GB RAM may be required to run some of the models
   fusion_point: early # only for Two-Stream network
