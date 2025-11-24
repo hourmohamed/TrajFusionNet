@@ -171,7 +171,7 @@ class JAAD(object):
             bbox[2] = img_width
         return bbox
 
-    def extract_and_save_images(self, frame_step=2):
+    def extract_and_save_images(self, frame_step=6):
         """
         Extract images from clips and save on drive
         Args:
