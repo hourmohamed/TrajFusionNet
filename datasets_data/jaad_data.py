@@ -171,11 +171,12 @@ class JAAD(object):
             bbox[2] = img_width
         return bbox
 
-    def extract_and_save_images(self):
+    def extract_and_save_images(self, frame_step=2):
         """
         Extract images from clips and save on drive
+        Args:
+            frame_step (int): Extract every Nth frame (default=2 means every 2nd frame)
         """
-
         videos = [f.split('.')[0] for f in sorted(listdir(self._clips_path))]
 
         for vid in videos:
@@ -185,8 +186,8 @@ class JAAD(object):
             num_frames = int(tree.find("./meta/task/size").text)
 
             video_clip_path = join(self._clips_path, vid + '.mp4')
-
             save_images_path = join(self._images_path, vid)
+            
             if not exists(save_images_path):
                 makedirs(save_images_path)
 
@@ -194,21 +195,26 @@ class JAAD(object):
             success, image = vidcap.read()
             frame_num = 0
             img_count = 0
+            
             if not success:
                 print('Failed to open the video {}'.format(vid))
+            
             while success:
-                self.update_progress(img_count / num_frames)
-                img_count += 1
-                img_path = join(save_images_path, "{:05d}.png".format(frame_num))
-                if not exists(img_path):
-                    cv2.imwrite(img_path, image)
-                #else:
-                #    print('path {} already exists'.format(img_path))
+                # Only save every frame_step frames
+                if frame_num % frame_step == 0:
+                    self.update_progress(img_count / (num_frames // frame_step))
+                    img_path = join(save_images_path, "{:05d}.png".format(frame_num))
+                    if not exists(img_path):
+                        cv2.imwrite(img_path, image)
+                    img_count += 1
+                
                 success, image = vidcap.read()
                 frame_num += 1
-            if num_frames != img_count:
-                print('num images don\'t match {}/{}'.format(num_frames, img_count))
+            
+            if abs(num_frames // frame_step - img_count) > 1:
+                print('num images don\'t match {}/{}'.format(num_frames // frame_step, img_count))
             print('\n')
+
 
     # Annotation processing helpers
     def _map_text_to_scalar(self, label_type, value):
