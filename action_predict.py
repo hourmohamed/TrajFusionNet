@@ -1235,7 +1235,6 @@ class ActionPredict(object):
               hyperparams: dict = None,
               test_only: bool = False,
               train_end_to_end: bool = False):
-        print("TRAININGGGGGGGGGG")
         """
         Trains the models
         Args:
@@ -1263,9 +1262,7 @@ class ActionPredict(object):
         path_params = {'save_folder': os.path.join(self.__class__.__name__, model_folder_name),
                        'save_root_folder': 'data/models/',
                        'dataset': model_opts['dataset_full']}
-        print("TRAINING: BEFORE GET PATH")
         model_path, hg_model_path = get_path(**path_params, file_name='model.h5')
-        print("TRAINING: before if end to end")
         if train_end_to_end:
             submodels_paths = self.train_trajectory_pred_tf_first(
                 dataset=model_opts["dataset_full"],
@@ -1274,7 +1271,6 @@ class ActionPredict(object):
             submodels_paths = None
 
         # Read train data
-        print("TRAIN LOOP: READ DATA")
         data_train = self.get_data('train', data_train, 
                                    {**model_opts, 'batch_size': batch_size},
                                    submodels_paths=submodels_paths) 
@@ -1287,7 +1283,6 @@ class ActionPredict(object):
                 data_val = data_val[0]
 
         # Use custom training functions for some models
-        print("TRAIN LOOP: IF HUGGING FACE")
         if is_huggingface:
             dataset_statistics = get_dataset_statistics(data_train, model_opts)
             model = self.get_huggingface_model(model_opts)
@@ -1317,12 +1312,10 @@ class ActionPredict(object):
         # If model uses the tensorflow framework...
         if not self.is_tensorflow:
             raise Exception("The appropriate training framework is not specified in configs")
-        print("TRAIN LOOP: GET MODEL AND OPTIMIZER")
         with self.multi_gpu_strategy.scope():
             train_model, class_w, optimizer, f1_metric = \
                 self._get_model_and_optimizer(data_train, model_opts, lr, optimizer)
        
-        print("TRAIN LOOP: COMPILE")
         # Train the model
         train_model.compile(
             loss='binary_crossentropy',
@@ -1330,7 +1323,6 @@ class ActionPredict(object):
             metrics=['accuracy', f1_metric])
 
         callbacks = self.get_callbacks(learning_scheduler, model_path)
-        print("TRAIN LOOP: before fit")
         history = train_model.fit(x=data_train['data'][0],
                                   y=None if self._generator else data_train['data'][1],
                                   batch_size=batch_size,
@@ -1466,7 +1458,7 @@ class ActionPredict(object):
                 "-d", dataset, "-s", "trajectory"])
         else:
             traj_tf_path = run_and_capture_model_path(
-                ["python3", "train_test.py", "-c", "config_files/TrajectoryTransformer.yaml", 
+                ["python3", "-u", "train_test.py", "-c", "config_files/TrajectoryTransformer.yaml", 
                 "-d", dataset, "-s", "trajectory"])
         submodels_paths = {
             "traj_tf_path": traj_tf_path
