@@ -4,6 +4,9 @@ import math
 import time
 from typing import Any
 import yaml
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 
 #import tensorflow as tf
 #import tensorflow_addons as tfa
