@@ -1459,21 +1459,23 @@ class ActionPredict(object):
             bounding boxes, which will then be used as overlays on context scene 
             images in the VAM branch.
         """
-
+        print("ENTA HENA??")
         # Train trajectory prediction encoder-decoder transformer
         if "Small" in model:
+            print("Small")
             traj_tf_path = run_and_capture_model_path(
                 ["python3", "train_test.py", "-c", "config_files/SmallTrajectoryTransformer.yaml", 
                 "-d", dataset, "-s", "trajectory"])
         else:
+            print("Mesh small")
             traj_tf_path = run_and_capture_model_path(
                 ["python3", "train_test.py", "-c", "config_files/TrajectoryTransformer.yaml", 
                 "-d", dataset, "-s", "trajectory"])
-        
+        print("tele3 mn el if")
         submodels_paths = {
             "traj_tf_path": traj_tf_path
         }
-        
+        print("ma 5alas aho fe eh")
         return submodels_paths
 
     def get_model(self, data_params):
