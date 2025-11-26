@@ -130,10 +130,10 @@ def run(config_file: str = None,
             configs['train_opts']['batch_size'] = 8
         if model_name in ['TwoStream']:
             configs['train_opts']['batch_size'] = 16
-
+        print("abl el sequences")
         beh_seq_train, beh_seq_val, beh_seq_test, beh_seq_test_cross_dataset = \
             get_trajectory_sequences(configs, free_memory)
-        
+        print("abl el hyperparams")
         model = ""
         submodel = ""
         hyperparams_orchestrator = HyperparamsOrchestrator(tune_hyperparameters, model, submodel)
