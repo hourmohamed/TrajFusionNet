@@ -16,5 +16,5 @@ model_opts:
 exp_opts:
   datasets: [jaad]
   batch_size: [16]
-  epochs: [60]
+  epochs: [5]
   lr: [5.0e-06]
