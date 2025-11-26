@@ -130,18 +130,14 @@ def run(config_file: str = None,
             configs['train_opts']['batch_size'] = 8
         if model_name in ['TwoStream']:
             configs['train_opts']['batch_size'] = 16
-        print("abl el sequences")
         beh_seq_train, beh_seq_val, beh_seq_test, beh_seq_test_cross_dataset = \
             get_trajectory_sequences(configs, free_memory)
-        print("abl el hyperparams")
         model = ""
         submodel = ""
         hyperparams_orchestrator = HyperparamsOrchestrator(tune_hyperparameters, model, submodel)
         for i in range(hyperparams_orchestrator.nb_cases):
             hyperparams = hyperparams_orchestrator.get_next_case()
-            print("abl el if")
             if hyperparams:
-                print("ba3d el if")
                 print(f"Training model with hyperparams set {i}: {str(hyperparams[model][submodel])}")
             saved_files_path = \
                 train_test_model(configs, beh_seq_train, beh_seq_val, beh_seq_test,
@@ -163,13 +159,13 @@ def train_test_model(configs: dict, beh_seq_train: dict,
                      train_end_to_end: bool = False):
     
     is_huggingface = configs['model_opts'].get("frameworks") and configs['model_opts']["frameworks"]["hugging_faces"]
-
+    print("TRAIN TEST: before getting model")
     # get the model
     model_configs = copy.deepcopy(configs['net_opts'])
     configs['model_opts']['seq_type'] = configs['data_opts']['seq_type']
     model_configs["model_opts"] = configs['model_opts']
     method_class = action_prediction(configs['model_opts']['model'])(**model_configs)
-
+    print("TRAIN TEST: before train")
     # train and save the model
     saved_files_path = method_class.train(
         beh_seq_train, beh_seq_val, 
@@ -182,7 +178,7 @@ def train_test_model(configs: dict, beh_seq_train: dict,
         test_only=test_only,
         train_end_to_end=train_end_to_end
     )
-    
+    print("TRAIN TEST: after train")
     if free_memory:
         free_train_and_val_memory(beh_seq_train, beh_seq_val)
 
