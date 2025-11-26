@@ -64,6 +64,7 @@ class TrajectoryOverlays(metaclass=Singleton):
         for child in pretrained_model.children():
             for param in child.parameters():
                 param.requires_grad = False
+        pretrained_model = pretrained_model.to(self.device)   # <-- ADD
         self.traj_TF = pretrained_model
 
     def compute_trajectory_overlays(self, 
@@ -99,15 +100,15 @@ class TrajectoryOverlays(metaclass=Singleton):
         trajectory_seq_norm = normalize_trajectory_data(traj_data, 
             "z_score", dataset_statistics=self.dataset_statistics)
         trajectory_seq_norm = np.expand_dims(trajectory_seq_norm, axis=0)
-        trajectory_seq_norm = torch.FloatTensor(trajectory_seq_norm)
+        trajectory_seq_norm = torch.FloatTensor(trajectory_seq_norm).to(self.device)
 
         # Run trajectory prediction
         output = self.traj_TF(
             normalized_trajectory_values=trajectory_seq_norm,
-            return_logits=True)
+            return_logits=True).to(self.device)
         
         # Denormalize data
-        output = output.squeeze(0).numpy()
+        output = output.squeeze(0).cpu().numpy()
         denormalized = denormalize_trajectory_data(
             output, "z_score", self.dataset_statistics)
         
