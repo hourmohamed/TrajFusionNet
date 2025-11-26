@@ -43,6 +43,7 @@ class HyperparamsOrchestrator():
             self.params_list = list(itertools.product(*s))
     
     def get_next_case(self):
+        print("HELLO FROM ORCHESTRATOR")
         if not self.tune_hyperparameters:
             return {}
         print("ORCHESTRATOR: abl el copy")
