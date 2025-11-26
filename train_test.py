@@ -137,7 +137,9 @@ def run(config_file: str = None,
         model = ""
         submodel = ""
         hyperparams_orchestrator = HyperparamsOrchestrator(tune_hyperparameters, model, submodel)
+        print("abl el loop")
         for i in range(hyperparams_orchestrator.nb_cases):
+            print("fel loop")
             hyperparams = hyperparams_orchestrator.get_next_case()
             if hyperparams:
                 print(f"Training model with hyperparams set {i}: {str(hyperparams[model][submodel])}")
