@@ -6,8 +6,6 @@ def run_and_capture_model_path(command: list):
         for line in iter(process.stdout.readline, ''):
             print(line, end="")
             captured_output.append(line)
-        process.stdout.close()
-        process.wait()
     prefix = "Model saved under: "
     for l in reversed(captured_output):
         print("loop 2")
