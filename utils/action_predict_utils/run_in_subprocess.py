@@ -4,7 +4,6 @@ def run_and_capture_model_path(command: list):
     captured_output, model_path = [], ""
     with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True) as process:
         for line in iter(process.stdout.readline, ''):
-            print("Loop")
             print(line, end="")
             captured_output.append(line)
         process.stdout.close()
