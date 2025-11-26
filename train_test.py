@@ -14,7 +14,7 @@ from models.models import *
 from models.multi_branch_models.combined_models import *
 from utils.action_predict_utils.sequences import get_trajectory_sequences 
 from utils.global_variables import get_time_writing_to_disk
-from utils.hyperparameters import HyperparamsOrchestrator
+from utils.hyperparameters import HyperparamsOrchestrator, HYPERPARAMS
 from utils.utils import IndentedDumper
 
 SEED = 42
@@ -132,12 +132,20 @@ def run(config_file: str = None,
             configs['train_opts']['batch_size'] = 16
         beh_seq_train, beh_seq_val, beh_seq_test, beh_seq_test_cross_dataset = \
             get_trajectory_sequences(configs, free_memory)
-        model = configs['model_opts']['model']              # must match HYPERPARAMS key
-        submodel = next(iter(hyperparams[model].keys()))    # first submodel under that key
-        hyperparams_orchestrator = HyperparamsOrchestrator(tune_hyperparameters, model, submodel)
+        model = configs['model_opts']['model'].lower()  # match keys in HYPERPARAMS
+        if model in HYPERPARAMS:
+            submodel = next(iter(HYPERPARAMS[model].keys()))  # first submodel under that key
+            hyperparams_orchestrator = HyperparamsOrchestrator(
+                tune_hyperparameters,
+                model,
+                submodel
+            )
+        else:
+            # If no hyperparameters defined, just run one training session
+            hyperparams_orchestrator = HyperparamsOrchestrator(False, None, None)
+
         print("abl el loop")
         for i in range(hyperparams_orchestrator.nb_cases):
-            print("fel loop")
             hyperparams = hyperparams_orchestrator.get_next_case()
             print("abl el if")
             if hyperparams:
