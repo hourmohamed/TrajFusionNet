@@ -159,13 +159,11 @@ def train_test_model(configs: dict, beh_seq_train: dict,
                      train_end_to_end: bool = False):
     
     is_huggingface = configs['model_opts'].get("frameworks") and configs['model_opts']["frameworks"]["hugging_faces"]
-    print("TRAIN TEST: before getting model")
     # get the model
     model_configs = copy.deepcopy(configs['net_opts'])
     configs['model_opts']['seq_type'] = configs['data_opts']['seq_type']
     model_configs["model_opts"] = configs['model_opts']
     method_class = action_prediction(configs['model_opts']['model'])(**model_configs)
-    print("TRAIN TEST: before train")
     # train and save the model
     saved_files_path = method_class.train(
         beh_seq_train, beh_seq_val, 
@@ -178,7 +176,6 @@ def train_test_model(configs: dict, beh_seq_train: dict,
         test_only=test_only,
         train_end_to_end=train_end_to_end
     )
-    print("TRAIN TEST: after train")
     if free_memory:
         free_train_and_val_memory(beh_seq_train, beh_seq_val)
 
