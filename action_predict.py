@@ -1465,7 +1465,6 @@ class ActionPredict(object):
                 ["python3", "train_test.py", "-c", "config_files/SmallTrajectoryTransformer.yaml", 
                 "-d", dataset, "-s", "trajectory"])
         else:
-            print("Mesh small")
             traj_tf_path = run_and_capture_model_path(
                 ["python3", "train_test.py", "-c", "config_files/TrajectoryTransformer.yaml", 
                 "-d", dataset, "-s", "trajectory"])
