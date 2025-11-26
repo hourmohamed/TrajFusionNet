@@ -1235,6 +1235,7 @@ class ActionPredict(object):
               hyperparams: dict = None,
               test_only: bool = False,
               train_end_to_end: bool = False):
+        print("TRAININGGGGGGGGGG")
         """
         Trains the models
         Args:

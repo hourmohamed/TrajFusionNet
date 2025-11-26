@@ -43,12 +43,10 @@ class HyperparamsOrchestrator():
             self.params_list = list(itertools.product(*s))
     
     def get_next_case(self):
-        print("HELLO FROM ORCHESTRATOR")
         if not self.tune_hyperparameters:
             return {}
         case = copy.deepcopy(HYPERPARAMS)
         for idx, (key, value) in enumerate(HYPERPARAMS[self.model][self.submodel].items()):
-            print("ORCHESTRATOR: fel loop")
             case[self.model][self.submodel][key] = self.params_list[self.current_case_idx][idx]
         self.current_case_idx += 1
         return case
