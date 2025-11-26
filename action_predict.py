@@ -1263,8 +1263,9 @@ class ActionPredict(object):
         path_params = {'save_folder': os.path.join(self.__class__.__name__, model_folder_name),
                        'save_root_folder': 'data/models/',
                        'dataset': model_opts['dataset_full']}
+        print("TRAINING: BEFORE GET PATH")
         model_path, hg_model_path = get_path(**path_params, file_name='model.h5')
-
+        print("TRAINING: before if end to end")
         if train_end_to_end:
             submodels_paths = self.train_trajectory_pred_tf_first(
                 dataset=model_opts["dataset_full"],
